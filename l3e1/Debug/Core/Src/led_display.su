@@ -1,0 +1,8 @@
+led_display.c:14:6:display7SEG	24	static
+led_display.c:22:6:update7SEG	16	static
+led_display.c:33:6:set_traffic	24	static
+led_display.c:43:6:dot_led	8	static
+led_display.c:50:6:dm1	4	static
+led_display.c:78:6:dm2	4	static
+led_display.c:79:6:dm3	4	static
+led_display.c:80:6:dm4	4	static
