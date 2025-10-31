@@ -9,9 +9,9 @@ static int button_flag[3] = {0};
 
 void processing_init(void){
     traffic_init();
-    setTimer0(100);
-    setTimer1(100);
-    setTimer2(100);
+    setTimer0(50);
+    setTimer1(25);
+    setTimer2(10);
 }
 
 void blink_leds_mode(void){
@@ -40,16 +40,22 @@ void blink_leds_mode(void){
         }
     }
 }
-
 void processing_run(void){
-    // QUÉT LED7 - LUÔN CHẠY
+    // Quét LED7
     if(timer1_flag){
         timer1_flag = 0;
         scan7SEG();
-        setTimer1(250);
+        setTimer1(25);
     }
 
-    // XỬ LÝ BUTTON
+    // Đọc button
+    if(timer3_flag){
+        timer3_flag = 0;
+        button_reading();
+        setTimer3(10);
+    }
+
+    // Xử lý button chuyển mode
     if(is_button_pressed(0)){
         if(!button_flag[0]){
             button_flag[0] = 1;
@@ -67,7 +73,6 @@ void processing_run(void){
     // XỬ LÝ TỪNG MODE
     switch(mode){
         case 1:
-            // MODE 1: LUÔN GỌI TRAFFIC_UPDATE()
             traffic_update();
             upclock(counter_NS);
             upmode(1);

@@ -1,4 +1,4 @@
 seven_segment.c:14:6:upclock	16	static
 seven_segment.c:19:6:upmode	16	static
 seven_segment.c:24:13:display7SEG	24	static
-seven_segment.c:35:6:scan7SEG	8	static
+seven_segment.c:34:6:scan7SEG	8	static

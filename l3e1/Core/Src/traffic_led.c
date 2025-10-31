@@ -19,9 +19,14 @@ static void setWE(int R, int Y, int G){
 }
 
 void set_traffic_time(int r, int y, int g){
-    red_time = r;
     yellow_time = y;
     green_time = g;
+    red_time = r;
+    if (red_time<green_time + yellow_time)
+    {red_time = yellow_time + green_time;}
+    if (red_time > green_time + yellow_time) {
+    	green_time = red_time - yellow_time;
+    };
 }
 
 int get_red(void){ return red_time; }
@@ -48,8 +53,6 @@ void traffic_update(void){
         timer0_flag = 0;
 
         counter_NS--;
-
-
         switch(state){
             case 0:
                 setNS(0,0,1);
@@ -83,8 +86,10 @@ void traffic_update(void){
                     counter_NS = green_time;
                 }
                 break;
+            default: // CASE DEFAULT - RESET VỀ STATE 0
+                          state = 0;
+            break;
         }
-
         setTimer0(100);
     }
 }

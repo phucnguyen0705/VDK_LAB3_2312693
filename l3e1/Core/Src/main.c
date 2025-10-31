@@ -1,47 +1,38 @@
 #include "main.h"
 #include "timer.h"
-#include "seven_segment.h"
-#include "traffic_led.h"
-#include "processing.h"
 #include "input_reading.h"
+#include "processing.h"
+
 TIM_HandleTypeDef htim2;
+
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 
-int main(void){
-    HAL_Init();
-    SystemClock_Config();
-    MX_GPIO_Init();
-    MX_TIM2_Init();
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_TIM2_Init();
 
-    HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim2);
 
-    processing_init();
-    button_reading_Init();
-    setTimer1(25);
-    setTimer3(25);
-
-    while(1){
-        processing_run();
-    }
+  processing_init();
+  button_reading_Init();
+  setTimer3(10);
+  while (1)
+  {
+    processing_run();
+  }
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-    if(htim->Instance == TIM2){
-        timerRun();
-
-        if(timer1_flag){
-            timer1_flag = 0;
-            scan7SEG();
-            setTimer1(25);
-        }
-        if(timer3_flag){
-            timer3_flag = 0;
-            button_reading();
-            setTimer3(25);
-        }
-    }
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == TIM2)
+  {
+    timerRun();
+  }
 }
 void SystemClock_Config(void)
 {
@@ -134,36 +125,30 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, s0_Pin|s1_Pin|s2_Pin|s3_Pin
-                          |s4_Pin|s5_Pin|s6_Pin|dot_Pin
-                          |snr_Pin|sny_Pin|sng_Pin|wer_Pin
-                          |wey_Pin|weg_Pin, GPIO_PIN_RESET);
+                          |s4_Pin|s5_Pin|s6_Pin|snr_Pin
+                          |sny_Pin|sng_Pin|wer_Pin|wey_Pin
+                          |weg_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, l1_Pin|l2_Pin|l3_Pin|l4_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : s0_Pin s1_Pin s2_Pin s3_Pin
-                           s4_Pin s5_Pin s6_Pin dot_Pin
-                           snr_Pin sny_Pin sng_Pin wer_Pin
-                           wey_Pin weg_Pin */
+                           s4_Pin s5_Pin s6_Pin snr_Pin
+                           sny_Pin sng_Pin wer_Pin wey_Pin
+                           weg_Pin */
   GPIO_InitStruct.Pin = s0_Pin|s1_Pin|s2_Pin|s3_Pin
-                          |s4_Pin|s5_Pin|s6_Pin|dot_Pin
-                          |snr_Pin|sny_Pin|sng_Pin|wer_Pin
-                          |wey_Pin|weg_Pin;
+                          |s4_Pin|s5_Pin|s6_Pin|snr_Pin
+                          |sny_Pin|sng_Pin|wer_Pin|wey_Pin
+                          |weg_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : b1_Pin */
-  GPIO_InitStruct.Pin = b1_Pin;
+  /*Configure GPIO pins : b1_Pin b2_Pin b3_Pin */
+  GPIO_InitStruct.Pin = b1_Pin|b2_Pin|b3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(b1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : b2_Pin b3_Pin */
-  GPIO_InitStruct.Pin = b2_Pin|b3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : l1_Pin l2_Pin l3_Pin l4_Pin */

@@ -1,9 +1,9 @@
 traffic_led.c:9:13:setNS	24	static
 traffic_led.c:15:13:setWE	24	static
 traffic_led.c:21:6:set_traffic_time	24	static
-traffic_led.c:27:5:get_red	4	static
-traffic_led.c:28:5:get_yellow	4	static
-traffic_led.c:29:5:get_green	4	static
-traffic_led.c:31:6:turnOffTraffic	8	static
-traffic_led.c:39:6:traffic_init	8	static
-traffic_led.c:46:6:traffic_update	8	static
+traffic_led.c:32:5:get_red	4	static
+traffic_led.c:33:5:get_yellow	4	static
+traffic_led.c:34:5:get_green	4	static
+traffic_led.c:36:6:turnOffTraffic	8	static
+traffic_led.c:44:6:traffic_init	8	static
+traffic_led.c:51:6:traffic_update	8	static
