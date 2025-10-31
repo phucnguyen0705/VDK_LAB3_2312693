@@ -17,9 +17,11 @@ int main(void)
   MX_TIM2_Init();
 
   HAL_TIM_Base_Start_IT(&htim2);
-
   processing_init();
   button_reading_Init();
+  setTimer0(50);
+  setTimer1(25);
+  setTimer2(25);
   setTimer3(10);
   while (1)
   {

@@ -6,12 +6,14 @@
 
 static int mode = 1;
 static int button_flag[3] = {0};
-
+static int sync_blink = 0;
+static int temp_red, temp_yellow, temp_green;
 void processing_init(void){
     traffic_init();
-    setTimer0(50);
-    setTimer1(25);
-    setTimer2(10);
+
+    temp_red = get_red();
+    temp_yellow = get_yellow();
+    temp_green = get_green();
 }
 
 void blink_leds_mode(void){
@@ -20,7 +22,6 @@ void blink_leds_mode(void){
     if(timer2_flag){
         timer2_flag = 0;
         blink_state = !blink_state;
-        setTimer2(100);
 
         switch(mode){
             case 2:
@@ -38,39 +39,93 @@ void blink_leds_mode(void){
             default:
                 break;
         }
+        if(sync_blink > 0){
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, blink_state);
+            sync_blink--;
+            if(sync_blink == 0){
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, 0);
+            }
+        }
     }
 }
+
 void processing_run(void){
-    // Quét LED7
-    if(timer1_flag){
-        timer1_flag = 0;
-        scan7SEG();
-        setTimer1(25);
-    }
 
-    // Đọc button
-    if(timer3_flag){
-        timer3_flag = 0;
-        button_reading();
-        setTimer3(10);
-    }
-
-    // Xử lý button chuyển mode
+	  if(timer1_flag){
+		        timer1_flag = 0;
+		        scan7SEG();
+		        setTimer1(25);
+		    }
+	    if(timer3_flag){
+	        timer3_flag = 0;
+	        button_reading();
+	        setTimer3(10);
+	    }
     if(is_button_pressed(0)){
         if(!button_flag[0]){
             button_flag[0] = 1;
             mode = mode + 1;
             if(mode > 4) mode = 1;
             turnOffTraffic();
+
             if(mode == 1){
                 traffic_init();
+            } else {
+                temp_red = get_red();
+                temp_yellow = get_yellow();
+                temp_green = get_green();
             }
         }
     } else {
         button_flag[0] = 0;
     }
 
-    // XỬ LÝ TỪNG MODE
+    // Xử lý button TĂNG GIÁ TRỊ (BUTTON 2) - CHỈ TĂNG TRONG BIẾN TẠM
+    if(is_button_pressed(1)){
+        if(!button_flag[1]){
+            button_flag[1] = 1;
+
+            switch(mode){
+                case 2:  // Tăng thời gian đỏ TẠM THỜI
+                    temp_red++;
+                    if(temp_red > 99) temp_red = 1;
+                    break;
+
+                case 3:  // Tăng thời gian vàng TẠM THỜI
+                    temp_yellow++;
+                    if(temp_yellow > 99) temp_yellow = 1;
+                    break;
+
+                case 4:  // Tăng thời gian xanh TẠM THỜI
+                    temp_green++;
+                    if(temp_green > 99) temp_green = 1;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    } else {
+        button_flag[1] = 0;
+    }
+
+    // Xử lý button LƯU GIÁ TRỊ (BUTTON 3) - DÙNG set_traffic_time ĐỂ LƯU
+    if(is_button_pressed(2)){
+        if(!button_flag[2]){
+            button_flag[2] = 1;
+
+            // LƯU GIÁ TRỊ bằng hàm set_traffic_time
+            set_traffic_time(temp_red, temp_yellow, temp_green);
+
+            // Nếu đang ở mode 1, khởi động lại traffic
+            if(mode == 1){
+                traffic_init();
+            }
+        }
+    } else {
+        button_flag[2] = 0;
+    }
+
     switch(mode){
         case 1:
             traffic_update();
@@ -80,46 +135,19 @@ void processing_run(void){
 
         case 2:
             blink_leds_mode();
-            if(is_button_pressed(1)){
-                if(!button_flag[1]){
-                    button_flag[1] = 1;
-                    int new_red = (get_red() % 99) + 1;
-                    set_traffic_time(new_red, get_yellow(), get_green());
-                }
-            } else {
-                button_flag[1] = 0;
-            }
-            upclock(get_red());
+            upclock(temp_red);
             upmode(2);
             break;
 
         case 3:
             blink_leds_mode();
-            if(is_button_pressed(1)){
-                if(!button_flag[1]){
-                    button_flag[1] = 1;
-                    int new_yellow = (get_yellow() % 99) + 1;
-                    set_traffic_time(get_red(), new_yellow, get_green());
-                }
-            } else {
-                button_flag[1] = 0;
-            }
-            upclock(get_yellow());
+            upclock(temp_yellow);
             upmode(3);
             break;
 
         case 4:
             blink_leds_mode();
-            if(is_button_pressed(1)){
-                if(!button_flag[1]){
-                    button_flag[1] = 1;
-                    int new_green = (get_green() % 99) + 1;
-                    set_traffic_time(get_red(), get_yellow(), new_green);
-                }
-            } else {
-                button_flag[1] = 0;
-            }
-            upclock(get_green());
+            upclock(temp_green);
             upmode(4);
             break;
 

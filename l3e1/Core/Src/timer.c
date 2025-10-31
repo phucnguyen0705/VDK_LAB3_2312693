@@ -9,7 +9,6 @@ void setTimer0(int duration){
     timer0_counter = duration / TIMER_CYCLE;
     timer0_flag = 0;
 }
-
 void setTimer1(int duration){
     timer1_counter = duration / TIMER_CYCLE;
     timer1_flag = 0;
@@ -19,12 +18,10 @@ void setTimer2(int duration){
     timer2_counter = duration / TIMER_CYCLE;
     timer2_flag = 0;
 }
-
 void setTimer3(int duration){
     timer3_counter = duration / TIMER_CYCLE;
     timer3_flag = 0;
 }
-
 void timerRun(void){
     if(timer0_counter > 0){
         timer0_counter--;
