@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define TIMER_CYCLE 1
+#define TIMER_CYCLE 10
 
 extern int timer0_flag;
 extern int timer1_flag;

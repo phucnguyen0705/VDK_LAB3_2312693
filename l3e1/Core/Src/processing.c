@@ -22,7 +22,7 @@ void blink_leds_mode(void){
     if(timer2_flag){
         timer2_flag = 0;
         blink_state = !blink_state;
-
+        setTimer0(250);
         switch(mode){
             case 2:
                 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, !blink_state);
@@ -50,11 +50,10 @@ void blink_leds_mode(void){
 }
 
 void processing_run(void){
-
 	  if(timer1_flag){
 		        timer1_flag = 0;
 		        scan7SEG();
-		        setTimer1(25);
+		        setTimer1(250);
 		    }
 	    if(timer3_flag){
 	        timer3_flag = 0;

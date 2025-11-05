@@ -102,6 +102,6 @@ void traffic_update(void){
                           state = 0;
             break;
         }
-        setTimer0(100);
+        setTimer0(1000);
     }
 }

@@ -32,9 +32,7 @@ static void display7SEG(int num){
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, ((seg >> 6) & 1));
 }
 void scan7SEG(void){
-    static int index = 0;
-
-    // TẮT TẤT CẢ LED TRƯỚC
+    static int index = 2;
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, 1);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, 1);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, 1);

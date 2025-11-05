@@ -19,10 +19,9 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   processing_init();
   button_reading_Init();
-  setTimer0(50);
-  setTimer1(25);
-  setTimer2(25);
-  setTimer3(10);
+  setTimer0(1000);
+  setTimer1(250);
+  setTimer3(100);
   while (1)
   {
     processing_run();
@@ -75,9 +74,6 @@ void SystemClock_Config(void)
 static void MX_TIM2_Init(void)
 {
 
-  /* USER CODE BEGIN TIM2_Init 0 */
-
-  /* USER CODE END TIM2_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
