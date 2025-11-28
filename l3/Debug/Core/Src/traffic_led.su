@@ -1,0 +1,10 @@
+traffic_led.c:10:13:setNS	24	static
+traffic_led.c:16:13:setWE	24	static
+traffic_led.c:22:6:set_traffic_time	24	static
+traffic_led.c:42:5:get_red	4	static
+traffic_led.c:43:5:get_yellow	4	static
+traffic_led.c:44:5:get_green	4	static
+traffic_led.c:46:6:turnOffTraffic	8	static
+traffic_led.c:55:6:traffic_init	8	static
+traffic_led.c:64:5:get_counter_NS	4	static
+traffic_led.c:68:6:traffic_update	8	static
